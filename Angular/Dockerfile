@@ -1,4 +1,4 @@
-FROM node:12.2.0-alpine
+FROM node:11-alpine
 
 COPY package.json yarn.lock /app/
 
@@ -12,3 +12,5 @@ COPY . /app
 # RUN yarn build --prod
 
 CMD yarn run start --host 0.0.0.0
+
+EXPOSE 4200
