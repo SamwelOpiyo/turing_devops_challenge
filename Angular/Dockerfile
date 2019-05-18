@@ -9,7 +9,7 @@ RUN yarn install
 
 COPY . /app
 
-# RUN yarn build --prod
+# RUN yarn run build --prod
 
 CMD yarn run start --host 0.0.0.0
 
