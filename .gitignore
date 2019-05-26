@@ -25,3 +25,5 @@ tfplan
 
 .*.swp
 .idea
+
+service_account_keys/

@@ -1,61 +1,70 @@
-resource "kubernetes_service" "vue_service" {
+resource "kubernetes_service" "vue-service" {
   metadata {
-    name = "vue_service"
+    name      = "vue-service"
     namespace = "default"
   }
+
   spec {
     selector {
-      app = "vue_app"
+      app = "vue-app"
     }
+
     session_affinity = "ClientIP"
+
     port {
-      port = 4200
+      port        = 4200
       target_port = 4200
     }
 
     # type = "LoadBalancer"
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }
 
-resource "kubernetes_deployment" "vue_deployment" {
+resource "kubernetes_deployment" "vue-deployment" {
   metadata {
-    name = "vue_deployment"
+    name      = "vue-deployment"
     namespace = "default"
+
     labels {
-      app = "vue_app"
+      app = "vue-app"
     }
   }
 
   spec {
-    replicas = 1
+    replicas          = 1
     min_ready_seconds = 10
 
     selector {
       match_labels {
-        app = "vue_app"
+        app = "vue-app"
       }
     }
 
     template {
       metadata {
         labels {
-          app = "vue_app",
+          app  = "vue-app"
           lang = "vue"
         }
       }
 
       spec {
         container {
-          image = "$(var.docker_image):$(var.docker_image_tag)"
+          image             = "${var.vue_docker_image}"
           image_pull_policy = "Always"
-          name  = "vue_container"
+          name              = "vue-container"
 
-          resources{
-            limits{
+          resources {
+            limits {
               cpu    = "0.2"
               memory = "200Mi"
             }
-            requests{
+
+            requests {
               cpu    = "0.1m"
               memory = "100Mi"
             }
@@ -64,4 +73,8 @@ resource "kubernetes_deployment" "vue_deployment" {
       }
     }
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }

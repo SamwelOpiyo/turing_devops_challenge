@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
-    bucket  = "$(var.backend_bucket_name)"
+    bucket  = "turing-devops-tfstate"
     prefix  = "terraform/state"
-    project = "$(var.backend_project_id)"
+    project = "cloud-playground-241611"
   }
 }

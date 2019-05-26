@@ -1,15 +1,3 @@
-# Backend configurations
-
-variable "backend_bucket_name" {
-  type        = "string"
-  description = "Name of GCP Bucket that hosts state files."
-}
-
-variable "backend_project_id" {
-  type        = "string"
-  description = "Name of GCP Project that hosts the bucket that hosts the state files."
-}
-
 # System wide configurations
 
 variable "region" {
@@ -142,4 +130,21 @@ variable "gke_label_env" {
   type        = "string"
   default     = "dev"
   description = "environment"
+}
+
+# Service Configurations.
+
+variable "vue_docker_image" {
+  type        = "string"
+  description = "Vue service image to deploy."
+}
+
+variable "angular_docker_image" {
+  type        = "string"
+  description = "Angular service image to deploy."
+}
+
+variable "react_docker_image" {
+  type        = "string"
+  description = "React service image to deploy."
 }

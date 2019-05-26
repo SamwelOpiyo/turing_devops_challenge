@@ -1,61 +1,70 @@
-resource "kubernetes_service" "angular_service" {
+resource "kubernetes_service" "angular-service" {
   metadata {
-    name = "angular_service"
+    name      = "angular-service"
     namespace = "default"
   }
+
   spec {
     selector {
-      app = "angular_app"
+      app = "angular-app"
     }
+
     session_affinity = "ClientIP"
+
     port {
-      port = 4200
+      port        = 4200
       target_port = 4200
     }
 
     # type = "LoadBalancer"
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }
 
-resource "kubernetes_deployment" "angular_deployment" {
+resource "kubernetes_deployment" "angular-deployment" {
   metadata {
-    name = "angular_deployment"
+    name      = "angular-deployment"
     namespace = "default"
+
     labels {
-      app = "angular_app"
+      app = "angular-app"
     }
   }
 
   spec {
-    replicas = 1
+    replicas          = 1
     min_ready_seconds = 10
 
     selector {
       match_labels {
-        app = "angular_app"
+        app = "angular-app"
       }
     }
 
     template {
       metadata {
         labels {
-          app = "angular_app",
+          app  = "angular-app"
           lang = "angular"
         }
       }
 
       spec {
         container {
-          image = "$(var.docker_image):$(var.docker_image_tag)"
+          image             = "${var.angular_docker_image}"
           image_pull_policy = "Always"
-          name  = "angular_container"
+          name              = "angular-container"
 
-          resources{
-            limits{
+          resources {
+            limits {
               cpu    = "0.2"
               memory = "200Mi"
             }
-            requests{
+
+            requests {
               cpu    = "0.1m"
               memory = "100Mi"
             }
@@ -64,4 +73,8 @@ resource "kubernetes_deployment" "angular_deployment" {
       }
     }
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }

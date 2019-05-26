@@ -1,61 +1,70 @@
-resource "kubernetes_service" "react_service" {
+resource "kubernetes_service" "react-service" {
   metadata {
-    name = "react_service"
+    name      = "react-service"
     namespace = "default"
   }
+
   spec {
     selector {
-      app = "react_app"
+      app = "react-app"
     }
+
     session_affinity = "ClientIP"
+
     port {
-      port = 4200
+      port        = 4200
       target_port = 4200
     }
 
     # type = "LoadBalancer"
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }
 
-resource "kubernetes_deployment" "react_deployment" {
+resource "kubernetes_deployment" "react-deployment" {
   metadata {
-    name = "react_deployment"
+    name      = "react-deployment"
     namespace = "default"
+
     labels {
-      app = "react_app"
+      app = "react-app"
     }
   }
 
   spec {
-    replicas = 1
+    replicas          = 1
     min_ready_seconds = 10
 
     selector {
       match_labels {
-        app = "react_app"
+        app = "react-app"
       }
     }
 
     template {
       metadata {
         labels {
-          app = "react_app",
+          app  = "react-app"
           lang = "react"
         }
       }
 
       spec {
         container {
-          image = "$(var.docker_image):$(var.docker_image_tag)"
+          image             = "${var.react_docker_image}"
           image_pull_policy = "Always"
-          name  = "react_container"
+          name              = "react-container"
 
-          resources{
-            limits{
+          resources {
+            limits {
               cpu    = "0.2"
               memory = "200Mi"
             }
-            requests{
+
+            requests {
               cpu    = "0.1m"
               memory = "100Mi"
             }
@@ -64,4 +73,8 @@ resource "kubernetes_deployment" "react_deployment" {
       }
     }
   }
+
+  depends_on = [
+    "module.terraform_gcp_gke",
+  ]
 }
