@@ -8,9 +8,9 @@ A challenge to join https://turing.ly/ as a freelance devops engineer. Services 
 | Angular	| https://github.com/SamwelOpiyo/Angular|
 | Vue	    | https://github.com/SamwelOpiyo/Vue    |
 
-# Infrastructure Setup
+# Infrastructure Setup.
 
-## Dependencies
+## Dependencies.
 
 * Google Cloud SDK: https://cloud.google.com/sdk/docs/
 * Kubectl Cli: https://kubernetes.io/docs/tasks/tools/install-kubectl/
@@ -18,7 +18,7 @@ A challenge to join https://turing.ly/ as a freelance devops engineer. Services 
   * https://learn.hashicorp.com/terraform/getting-started/install.html
   * https://www.terraform.io/downloads.html
 
-## Environment Variables
+## Environment Variables.
 
 Set the following environment variables. (Replace {project_id} with GCP Project Id.)
 
@@ -27,13 +27,21 @@ export TF_CREDS=./service_account_keys/main_service_account.json
 export TF_ADMIN="{project_id}"
 ```
 
-## Infrastructure Creation and Deployment
+## Infrastructure Creation and Deployment.
 
-### Project Creation
+### Google Cloud SDK Setup.
+
+Run the following command which will open google login page on a browser. Login using your account credentials to authenticate Google Cloud SDK.
+
+```
+gcloud auth application-default login
+```
+
+### Project Creation.
 
 Create a project on Google Cloud Platform Console https://console.cloud.google.com/cloud-resource-manager
 
-### Admin Service Account Setup
+### Admin Service Account Setup.
 
 Once the project is created, we will create a service account and its key if it does not exist.
 
@@ -60,9 +68,17 @@ We will give the service account project editor, Kubernetes Cluster Administrato
 ```
 gcloud projects add-iam-policy-binding ${TF_ADMIN} \
   --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
-  --role roles/editor \
-  --role roles/container.admin \
   --role roles/resourcemanager.projectIamAdmin
+```
+```
+gcloud projects add-iam-policy-binding ${TF_ADMIN} \
+  --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
+  --role roles/editor
+```
+```
+gcloud projects add-iam-policy-binding ${TF_ADMIN} \
+  --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
+  --role roles/container.admin
 ```
 
 ### Configuring the remote bucket.
@@ -104,7 +120,7 @@ Once these steps are followed, we initialize the backend.
 terraform init
 ```
 
-### Infrastructure Creation
+### Infrastructure Creation.
 
 Edit variables.tfvars appropriately before continuing.
 
@@ -135,8 +151,16 @@ terraform destroy -var-file variables.tfvars
 ```
 gcloud projects remove-iam-policy-binding ${TF_ADMIN} \
   --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
-  --role roles/editor \
-  --role roles/container.admin \
+  --role roles/editor
+```
+```
+gcloud projects remove-iam-policy-binding ${TF_ADMIN} \
+  --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
+  --role roles/container.admin
+```
+```
+gcloud projects remove-iam-policy-binding ${TF_ADMIN} \
+  --member serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com \
   --role roles/resourcemanager.projectIamAdmin
 ```
 
