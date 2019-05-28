@@ -12,15 +12,15 @@ resource "kubernetes_service" "react-service" {
     session_affinity = "ClientIP"
 
     port {
-      port        = 4200
-      target_port = 4200
+      port        = 5000
+      target_port = 5000
     }
 
     # type = "LoadBalancer"
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
   ]
 }
 
@@ -75,6 +75,7 @@ resource "kubernetes_deployment" "react-deployment" {
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
+    "kubernetes_service.react-service",
   ]
 }

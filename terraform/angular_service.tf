@@ -20,7 +20,7 @@ resource "kubernetes_service" "angular-service" {
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
   ]
 }
 
@@ -75,6 +75,7 @@ resource "kubernetes_deployment" "angular-deployment" {
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
+    "kubernetes_service.angular-service",
   ]
 }

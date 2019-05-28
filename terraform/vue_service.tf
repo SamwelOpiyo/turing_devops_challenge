@@ -12,15 +12,15 @@ resource "kubernetes_service" "vue-service" {
     session_affinity = "ClientIP"
 
     port {
-      port        = 4200
-      target_port = 4200
+      port        = 8080
+      target_port = 8080
     }
 
     # type = "LoadBalancer"
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
   ]
 }
 
@@ -75,6 +75,7 @@ resource "kubernetes_deployment" "vue-deployment" {
   }
 
   depends_on = [
-    "module.terraform_gcp_gke",
+    "null_resource.install-dependencies",
+    "kubernetes_service.vue-service",
   ]
 }
