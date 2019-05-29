@@ -18,6 +18,13 @@ A challenge to join https://turing.ly/ as a freelance devops engineer. Services 
   * https://learn.hashicorp.com/terraform/getting-started/install.html
   * https://www.terraform.io/downloads.html
 
+To install the three, run:
+
+```
+chmod +x install_clis.sh
+./install_clis.sh
+```
+
 ## Environment Variables.
 
 Set the following environment variables. (Replace {project_id} with GCP Project Id.)
