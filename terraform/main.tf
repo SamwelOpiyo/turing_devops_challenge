@@ -15,16 +15,16 @@ provider "kubernetes" {
 }
 
 module "terraform_gcp_gke" {
-  source       = "git::https://github.com/SamwelOpiyo/terraform_gcp_gke//?ref=v0.1.0-beta.2"
+  source       = "git::https://github.com/SamwelOpiyo/terraform_gcp_gke//?ref=v0.1.0-beta.3"
   region       = "${var.region}"
   zone         = "${var.zone}"
   project_name = "${var.project_name}"
-  project_id   = "${google_project_services.project-services.project}"                       # "${var.project_id}"
+  project_id   = "${google_project_services.project-services.project}" # "${var.project_id}"
 
   cluster_name                  = "${var.cluster_name}"
   cluster_description           = "${var.cluster_description}"
-  cluster_zone                  = "${var.cluster_zone}"
-  additional_cluster_zone       = "${var.additional_cluster_zone}"
+  cluster_location              = "${var.cluster_location}"
+  node_locations                = "${var.node_locations}"
   min_master_version            = "${var.min_master_version}"
   node_version                  = "${var.node_version}"
   cluster_initial_node_count    = "${var.cluster_initial_node_count}"
@@ -64,7 +64,7 @@ resource "google_project_services" "project-services" {
 }
 
 resource "null_resource" "install-dependencies" {
-  triggers {
+  triggers = {
     host = "${md5(module.terraform_gcp_gke.google_container_cluster_cluster_endpoint)}"
   }
 

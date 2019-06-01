@@ -74,9 +74,9 @@ output "google_container_cluster_name" {
   description = "The name of the cluster, unique within the project and zone."
 }
 
-output "google_container_cluster_zone" {
-  value       = "${module.terraform_gcp_gke.google_container_cluster_zone}"
-  description = "The zone that the master and the number of nodes specified in initial_node_count has been created in."
+output "google_container_cluster_location" {
+  value       = "${module.terraform_gcp_gke.google_container_location}"
+  description = "The location that the master and the number of nodes specified in initial_node_count has been created in."
 }
 
 output "google_container_cluster_cluster_ipv4_cidr" {
@@ -172,4 +172,22 @@ output "google_container_cluster_addons_config" {
 output "google_container_cluster_instance_group_urls" {
   value       = "${module.terraform_gcp_gke.google_container_cluster_instance_group_urls}"
   description = "List of instance group URLs which have been assigned to the cluster."
+}
+
+
+# Kubernetes Resources Outputs
+
+output "vue_image" {
+  value       = "${kubernetes_deployment.vue-deployment.spec[0].template[0].spec[0].container[0].image}"
+  description = "Current Vue Application Deployed."
+}
+
+output "angular_image" {
+  value       = "${kubernetes_deployment.angular-deployment.spec[0].template[0].spec[0].container[0].image}"
+  description = "Current Angular Application Deployed."
+}
+
+output "react_image" {
+  value       = "${kubernetes_deployment.react-deployment.spec[0].template[0].spec[0].container[0].image}"
+  description = "Current React Application Deployed."
 }

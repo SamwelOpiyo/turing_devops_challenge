@@ -55,10 +55,10 @@ variable "cluster_name" {
   description = "Desired name of GKE cluster"
 }
 
-variable "cluster_zone" {
+variable "cluster_location" {
   type        = "string"
-  default     = "europe-west1-b"
-  description = "GCP zone to launch servers"
+  default     = "europe-west1"
+  description = "GCP location to launch servers. If a zone is specified (such as us-central1-a), the cluster will be a zonal cluster with a single cluster master. If a region is specified (such as us-west1), the cluster will be a regional cluster with multiple masters spread across zones in the region, and with default node locations in those zones as well."
 }
 
 variable "cluster_description" {
@@ -67,10 +67,10 @@ variable "cluster_description" {
   description = "Description of the cluster."
 }
 
-variable "additional_cluster_zone" {
+variable "node_locations" {
   type        = "list"
   default     = []
-  description = "Other zones in the same region to launch servers."
+  description = "Other locations to launch servers. These must be in the same region as the cluster zone for zonal clusters, or in the region of a regional cluster. In a multi-zonal cluster, the number of nodes specified in initial_node_count is created in all specified zones as well as the primary zone. If specified for a regional cluster, nodes will only be created in these zones."
 }
 
 variable "min_master_version" {

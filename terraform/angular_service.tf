@@ -5,7 +5,7 @@ resource "kubernetes_service" "angular-service" {
   }
 
   spec {
-    selector {
+    selector = {
       app = "angular-app"
     }
 
@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "angular-deployment" {
     name      = "angular-deployment"
     namespace = "default"
 
-    labels {
+    labels = {
       app = "angular-app"
     }
   }
@@ -39,14 +39,14 @@ resource "kubernetes_deployment" "angular-deployment" {
     min_ready_seconds = 10
 
     selector {
-      match_labels {
+      match_labels = {
         app = "angular-app"
       }
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           app  = "angular-app"
           lang = "angular"
         }

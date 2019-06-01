@@ -5,7 +5,7 @@ resource "kubernetes_service" "react-service" {
   }
 
   spec {
-    selector {
+    selector = {
       app = "react-app"
     }
 
@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "react-deployment" {
     name      = "react-deployment"
     namespace = "default"
 
-    labels {
+    labels = {
       app = "react-app"
     }
   }
@@ -39,14 +39,14 @@ resource "kubernetes_deployment" "react-deployment" {
     min_ready_seconds = 10
 
     selector {
-      match_labels {
+      match_labels = {
         app = "react-app"
       }
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           app  = "react-app"
           lang = "react"
         }

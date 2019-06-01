@@ -5,7 +5,7 @@ resource "kubernetes_service" "vue-service" {
   }
 
   spec {
-    selector {
+    selector = {
       app = "vue-app"
     }
 
@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "vue-deployment" {
     name      = "vue-deployment"
     namespace = "default"
 
-    labels {
+    labels = {
       app = "vue-app"
     }
   }
@@ -39,14 +39,14 @@ resource "kubernetes_deployment" "vue-deployment" {
     min_ready_seconds = 10
 
     selector {
-      match_labels {
+      match_labels = {
         app = "vue-app"
       }
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           app  = "vue-app"
           lang = "vue"
         }
