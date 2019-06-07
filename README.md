@@ -142,6 +142,18 @@ and apply:
 terraform apply -var-file variables.tfvars
 ```
 
+### Monitoring and Logging
+
+Monitoring and Logging is set to use monitoring.googleapis.com/kubernetes and logging.googleapis.com/kubernetes respectively.
+
+To view container logs, navigate to https://console.cloud.google.com/kubernetes/workload?project={project_id}, click on the specific deployment and then click on container logs.
+
+To view more verbose monitoring charts/create a dashboard, we will use stackdriver.
+
+Create a stackdriver workspace for monitoring here, https://app.google.stackdriver.com/accounts/create and select the project hosting the cluster(Documentation: https://cloud.google.com/monitoring/workspaces/).
+
+After creating the workspace, navigate to https://app.google.stackdriver.com/kubernetes?project={project_id} to view monitoring updates.
+
 # Cleaning Up.
 
 To destroy everything, you need to perform the following actions.
