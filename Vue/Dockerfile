@@ -1,4 +1,4 @@
-FROM node:12.2.0-alpine
+FROM node:12.2.0-alpine as builder
 
 COPY package.json /app/
 
@@ -9,8 +9,14 @@ RUN yarn install
 
 COPY . /app
 
-# RUN yarn run build
+RUN yarn run build
 
-CMD yarn run serve --host 0.0.0.0
+FROM node:12.2.0-alpine
 
-EXPOSE 8080
+COPY --from=builder /app/dist/ /app/
+
+RUN yarn global add serve
+
+CMD serve -s /app
+
+EXPOSE 5000

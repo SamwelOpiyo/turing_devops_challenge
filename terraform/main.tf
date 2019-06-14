@@ -15,11 +15,11 @@ provider "kubernetes" {
 }
 
 module "terraform_gcp_gke" {
-  source       = "git::https://github.com/SamwelOpiyo/terraform_gcp_gke//?ref=v0.1.0-beta.3"
+  source       = "git::https://github.com/SamwelOpiyo/terraform_gcp_gke//?ref=v0.1.0-beta.4"
   region       = "${var.region}"
   zone         = "${var.zone}"
   project_name = "${var.project_name}"
-  project_id   = "${google_project_services.project-services.project}" # "${var.project_id}"
+  project_id   = "${var.project_id}"
 
   cluster_name                  = "${var.cluster_name}"
   cluster_description           = "${var.cluster_description}"
@@ -39,28 +39,19 @@ module "terraform_gcp_gke" {
   service_account_iam_roles     = "${var.cluster_service_account_iam_roles}"
   kubernetes_logging_service    = "${var.kubernetes_logging_service}"
   kubernetes_monitoring_service = "${var.kubernetes_monitoring_service}"
-}
 
-resource "google_project_services" "project-services" {
-  project            = "${var.project_id}"
-  disable_on_destroy = "false"
-
-  services = [
-    "cloudresourcemanager.googleapis.com",
-    "servicemanagement.googleapis.com",
-    "serviceusage.googleapis.com",
-    "storage-api.googleapis.com",
-    "iam.googleapis.com",
-    "oslogin.googleapis.com",
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "containerregistry.googleapis.com",
-    "logging.googleapis.com",
-    "monitoring.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "bigquery-json.googleapis.com",
-    "pubsub.googleapis.com",
-  ]
+  is_http_load_balancing_disabled        = "${var.is_http_load_balancing_disabled}"
+  is_kubernetes_dashboard_disabled       = "${var.is_kubernetes_dashboard_disabled}"
+  is_horizontal_pod_autoscaling_disabled = "${var.is_horizontal_pod_autoscaling_disabled}"
+  is_istio_disabled                      = "${var.is_istio_disabled}"
+  is_cloudrun_disabled                   = "${var.is_cloudrun_disabled}"
+  daily_maintenance_start_time           = "${var.daily_maintenance_start_time}"
+  is_vertical_pod_autoscaling_enabled    = "${var.is_vertical_pod_autoscaling_enabled}"
+  is_cluster_autoscaling_enabled         = "${var.is_cluster_autoscaling_enabled}"
+  cluster_autoscaling_cpu_max_limit      = "${var.cluster_autoscaling_cpu_max_limit}"
+  cluster_autoscaling_cpu_min_limit      = "${var.cluster_autoscaling_cpu_min_limit}"
+  cluster_autoscaling_memory_max_limit   = "${var.cluster_autoscaling_memory_max_limit}"
+  cluster_autoscaling_memory_min_limit   = "${var.cluster_autoscaling_memory_min_limit}"
 }
 
 resource "null_resource" "install-dependencies" {

@@ -12,8 +12,8 @@ resource "kubernetes_service" "angular-service" {
     session_affinity = "ClientIP"
 
     port {
-      port        = 4200
-      target_port = 4200
+      port        = 5000
+      target_port = 5000
     }
 
     # type = "LoadBalancer"
@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "angular-deployment" {
   }
 
   spec {
-    replicas          = 1
+    replicas          = 3
     min_ready_seconds = 10
 
     selector {

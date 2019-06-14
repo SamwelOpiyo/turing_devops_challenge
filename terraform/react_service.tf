@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "react-deployment" {
   }
 
   spec {
-    replicas          = 1
+    replicas          = 3
     min_ready_seconds = 10
 
     selector {

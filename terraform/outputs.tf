@@ -19,6 +19,7 @@ output "zone" {
 output "google_container_cluster_cluster_endpoint" {
   value       = "${module.terraform_gcp_gke.google_container_cluster_cluster_endpoint}"
   description = "Endpoint for accessing the master node"
+  sensitive   = true
 }
 
 output "google_container_cluster_client_certificate" {
@@ -26,7 +27,20 @@ output "google_container_cluster_client_certificate" {
 }
 
 output "google_container_cluster_client_key" {
-  value = "${module.terraform_gcp_gke.google_container_cluster_client_key}"
+  value     = "${module.terraform_gcp_gke.google_container_cluster_client_key}"
+  sensitive = true
+}
+
+output "google_container_cluster_master_username" {
+  value       = "${module.terraform_gcp_gke.google_container_cluster_master_username}"
+  description = "Username to authenticate with the k8s master"
+  sensitive   = true
+}
+
+output "google_container_cluster_master_password" {
+  value       = "${module.terraform_gcp_gke.google_container_cluster_master_password}"
+  description = "Password to authenticate with the k8s master"
+  sensitive   = true
 }
 
 output "google_container_cluster_cluster_ca_certificate" {
@@ -58,7 +72,8 @@ output "google_service_account_cluster_service_account_key_public_key" {
 }
 
 output "google_service_account_cluster_service_account_key_private_key" {
-  value = "${module.terraform_gcp_gke.google_service_account_cluster_service_account_key_private_key}"
+  value     = "${module.terraform_gcp_gke.google_service_account_cluster_service_account_key_private_key}"
+  sensitive = true
 }
 
 output "google_service_account_cluster_service_account_key_valid_after" {
@@ -122,6 +137,7 @@ output "google_container_cluster_monitoring_service" {
 output "google_container_cluster_master_auth" {
   value       = "${module.terraform_gcp_gke.google_container_cluster_master_auth}"
   description = "The authentication information for accessing the Kubernetes master."
+  sensitive   = true
 }
 
 output "google_container_cluster_min_master_version" {
@@ -190,4 +206,9 @@ output "angular_image" {
 output "react_image" {
   value       = "${kubernetes_deployment.react-deployment.spec[0].template[0].spec[0].container[0].image}"
   description = "Current React Application Deployed."
+}
+
+output "nginx-ingress-endpoint" {
+  value       = "${data.kubernetes_service.nginx-ingress-controller.load_balancer_ingress[0].ip}"
+  description = "IP of load balancer provisioned for nginx ingress."
 }

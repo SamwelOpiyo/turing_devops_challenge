@@ -1,4 +1,4 @@
-FROM node:11-alpine
+FROM node:11-alpine as builder
 
 COPY package.json yarn.lock /app/
 
@@ -9,8 +9,15 @@ RUN yarn install
 
 COPY . /app
 
-# RUN yarn run build --prod
+# When yarn is used, it raises API fatal error handler returned after process out of memory on the background thread
+RUN npm run build --prod
 
-CMD yarn run start --host 0.0.0.0
+FROM node:12.2.0-alpine
 
-EXPOSE 4200
+COPY --from=builder /app/dist/ /app/
+
+RUN yarn global add serve
+
+CMD serve -s /app
+
+EXPOSE 5000

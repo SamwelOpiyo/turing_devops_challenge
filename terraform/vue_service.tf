@@ -12,8 +12,8 @@ resource "kubernetes_service" "vue-service" {
     session_affinity = "ClientIP"
 
     port {
-      port        = 8080
-      target_port = 8080
+      port        = 5000
+      target_port = 5000
     }
 
     # type = "LoadBalancer"
@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "vue-deployment" {
   }
 
   spec {
-    replicas          = 1
+    replicas          = 3
     min_ready_seconds = 10
 
     selector {
