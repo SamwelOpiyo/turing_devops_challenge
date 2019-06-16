@@ -76,7 +76,7 @@ X+ represents one integer or more while S+ represents one alphanumeric character
 
 X+ represents one integer or more while S+ represents one alphanumeric character or more.
 
-# Infrastructure Setup.
+# Infrastructure Setup(First Time Setup).
 
 ## Dependencies.
 
@@ -158,30 +158,21 @@ gcloud projects add-iam-policy-binding ${TF_ADMIN} \
 
 ### Configuring the remote bucket.
 
-Create the remote backend bucket in Cloud Storage and the backend.tf file for storage of the terraform.tfstate file:
+Create the remote backend bucket in Cloud Storage for storage of the terraform.tfstate file:
 
 ```
 gsutil mb -p ${TF_ADMIN} gs://${TF_ADMIN}
 ```
 
-```
-cat > backend.tf <<EOF
-terraform {
- backend "gcs" {
-   bucket  = "${TF_ADMIN}"
-   prefix  = "terraform/state"
- }
-}
-EOF
-```
-
-We activate the version for this bucket.
+To activate the version for this bucket.
 
 ```
 gsutil versioning set on gs://${TF_ADMIN}
 ```
 
-We configure the enviroment.
+Update the backend.tf file appropriately.
+
+To configure the enviroment.
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=${TF_CREDS}
@@ -218,17 +209,109 @@ terraform output nginx-ingress-endpoint
 
 If any A records need to be added, they should point to this IP.
 
-### Monitoring and Logging
+# Infrastructure Setup(Subsequent Setups).
 
-Monitoring and Logging is set to use monitoring.googleapis.com/kubernetes and logging.googleapis.com/kubernetes respectively.
+## Dependencies.
 
-To view container logs, navigate to https://console.cloud.google.com/kubernetes/workload?project={project_id}, click on the specific deployment and then click on container logs.
+* Google Cloud SDK: https://cloud.google.com/sdk/docs/
+* Kubectl Cli: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+* Terraform:
+  * https://learn.hashicorp.com/terraform/getting-started/install.html
+  * https://www.terraform.io/downloads.html
 
-To view more verbose monitoring charts/create a dashboard, we will use stackdriver.
+To install the three, run:
 
-Create a stackdriver workspace for monitoring here, https://app.google.stackdriver.com/accounts/create and select the project hosting the cluster(Documentation: https://cloud.google.com/monitoring/workspaces/).
+```
+chmod +x install_clis.sh
+./install_clis.sh
+```
 
-After creating the workspace, navigate to https://app.google.stackdriver.com/kubernetes?project={project_id} to view monitoring updates.
+## Environment Variables.
+
+Set the following environment variables. (Replace {project_id} with GCP Project Id.)
+
+```
+export TF_CREDS=./service_account_keys/main_service_account.json
+export TF_ADMIN="{project_id}"
+```
+
+## Infrastructure Creation and Deployment.
+
+### Google Cloud SDK Setup.
+
+Run the following command which will open google login page on a browser. Login using your account credentials to authenticate Google Cloud SDK.
+
+```
+gcloud auth application-default login
+```
+
+### Admin Service Account Key.
+
+To check whether the key for the service account exists:
+
+```
+file service_account_keys/main_service_account.json
+```
+
+If the output is `cannot open service_account_keys/main_service_account.json (No such file or directory)` execute the following to create a service account key:
+
+```
+gcloud iam service-accounts keys create ${TF_CREDS} \
+  --iam-account terraform@${TF_ADMIN}.iam.gserviceaccount.com
+```
+
+### Configuring the remote bucket.
+
+Create the remote backend bucket in Cloud Storage if it does not exist. This bucket is used for storage of the terraform.tfstate file:
+
+```
+gsutil mb -p ${TF_ADMIN} gs://${TF_ADMIN}
+```
+
+To activate the version for this bucket.
+
+```
+gsutil versioning set on gs://${TF_ADMIN}
+```
+
+Update the backend.tf file appropriately.
+
+To configure the enviroment:
+
+```
+export GOOGLE_APPLICATION_CREDENTIALS=${TF_CREDS}
+export GOOGLE_PROJECT=${TF_ADMIN}
+```
+
+Once these steps are followed, we initialize the backend.
+
+```
+terraform init
+```
+
+### Infrastructure Creation.
+
+Edit variables.tfvars appropriately before continuing.
+
+Now we are ready to execute the plan:
+
+```
+terraform plan -var-file variables.tfvars
+```
+
+and apply:
+
+```
+terraform apply -var-file variables.tfvars
+```
+
+To get nginx ingress loadbalancer IP that is serving the applications:
+
+```
+terraform output nginx-ingress-endpoint
+```
+
+If any A records need to be added, they should point to this IP.
 
 # Cleaning Up.
 
@@ -264,3 +347,15 @@ gcloud projects remove-iam-policy-binding ${TF_ADMIN} \
 gcloud iam service-accounts delete \
   serviceAccount:terraform@${TF_ADMIN}.iam.gserviceaccount.com
 ```
+
+# Monitoring and Logging
+
+Monitoring and Logging is set to use monitoring.googleapis.com/kubernetes and logging.googleapis.com/kubernetes respectively.
+
+To view container logs, navigate to https://console.cloud.google.com/kubernetes/workload?project={project_id}, click on the specific deployment and then click on container logs.
+
+To view more verbose monitoring charts/create a dashboard, we will use stackdriver.
+
+Create a stackdriver workspace for monitoring here, https://app.google.stackdriver.com/accounts/create and select the project hosting the cluster(Documentation: https://cloud.google.com/monitoring/workspaces/).
+
+After creating the workspace, navigate to https://app.google.stackdriver.com/kubernetes?project={project_id} to view monitoring updates.

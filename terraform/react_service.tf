@@ -1,3 +1,11 @@
+/*
+This terraform script deploys https://github.com/SamwelOpiyo/React to gke cluster provisioned by main.tf in the default namespace.
+
+A service is first provisioned with ClusterIP to expose the application internally.
+Port exposed is port 5000 of the pod from target port 5000 of the container.
+*/
+
+
 resource "kubernetes_service" "react-service" {
   metadata {
     name      = "react-service"

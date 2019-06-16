@@ -1,3 +1,15 @@
+/*
+This terraform script creates an ingress resource to expose services in the cluster externally.
+
+The ingress utilizes nginx ingress installed by helm during cluster creation.
+
+The data of service nginx-ingress-controller in namespace nginx-ingress is obtained in order to get the Loadbalancer's IP that will be used to access the services.
+This IP can be gotten by executing `terraform output nginx-ingres-endpoint`.
+
+When creating A records for the applications, this is the IP that should be used.
+*/
+
+
 data "kubernetes_service" "nginx-ingress-controller" {
   metadata {
     name      = "nginx-ingress-controller"

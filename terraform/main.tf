@@ -1,3 +1,26 @@
+/*
+This terraform script calls another module, terraform_gcp_gke, to provision a GKE cluster.
+
+The module does the following:
+
+  Enables Google Cloud APIs required for creating GKE cluster using APIs.
+  Creates a Google Cloud service account that will be used by the custer as the main service account.
+  Assigns appropriate permissions to the service account.
+  Provisions a GKE cluster using configurations provided via terraform variables.
+  Get GKE cluster credentials and set kubectl to use it.
+
+After the cluster is provisioned, it does the following:
+
+  Installs Helm in environment.
+  Setup service account for tiller.
+  Instantiate helm in cluster with tiller enabled.
+  Update local helm repositories.
+  Install nginx ingress in namespace nginx-ingress.
+  Install cert manager in namespace cert-manager.
+  Create a production cluster issuer for cert manager with email set up as info@samwelopiyo.guru.
+*/
+
+
 provider "google" {
   region  = "${var.region}"
   zone    = "${var.zone}"

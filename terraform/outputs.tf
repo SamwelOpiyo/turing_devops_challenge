@@ -1,4 +1,17 @@
-# GCP GKE outputs for mudule terraform_gcp_gke
+/*
+Output values are like the return values of a Terraform module, and have several uses:
+
+    A child module can use outputs to expose a subset of its resource attributes to a parent module.
+    A root module can use outputs to print certain values in the CLI output after running terraform apply.
+    When using remote state, root module outputs can be accessed by other configurations via a terraform_remote_state data source.
+
+This script specifies outputs of the root module with some outputs gotten from module terraform_gcp_gke.
+
+To view a specific output, execute `terraform output <OUTPUT NAME>`.
+*/
+
+
+# GCP GKE outputs from mudule terraform_gcp_gke
 
 output "terraform_gcp_gke_project_name" {
   value = "${module.terraform_gcp_gke.project_name}"
